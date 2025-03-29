@@ -1,7 +1,7 @@
 # xDebug Helper Pro
 
 <div align="center">
-  <img src="public/xdebugPro.png" alt="xDebug Helper Pro" width="128" height="128" style="margin-right: 16px">
+  <img src="public/xdebugPro.png" alt="xDebug Helper Pro" width="384" height="128" style="margin-right: 16px">
   <h1>xDebug Helper Pro</h1>
 </div>
 
