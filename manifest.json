@@ -6,7 +6,8 @@
   "permissions": [
     "storage",
     "cookies",
-    "activeTab"
+    "activeTab",
+    "tabs"
   ],
   "host_permissions": [
     "<all_urls>"
@@ -14,9 +15,9 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icon.png",
-      "48": "icon.png",
-      "128": "icon.png"
+      "16": "icon.svg",
+      "48": "icon.svg",
+      "128": "icon.svg"
     }
   },
   "background": {
@@ -24,11 +25,11 @@
     "type": "module"
   },
   "icons": {
-    "16": "icon.png",
-    "48": "icon.png",
-    "128": "icon.png"
+    "16": "icon.svg",
+    "48": "icon.svg",
+    "128": "icon.svg"
   },
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'none'; style-src 'self'; default-src 'none';"
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'none'; style-src 'self' 'unsafe-inline'"
   }
 } 

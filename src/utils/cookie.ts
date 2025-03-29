@@ -1,64 +1,132 @@
 import browser from 'webextension-polyfill';
-import { DomainState, sanitizeDomain } from '../types';
-
-const XDEBUG_COOKIE_NAME = 'XDEBUG_SESSION';
+import type { DomainState } from '../types';
 
 /**
- * Updates the Xdebug session cookie for a domain
- * @param domain - The domain to update the cookie for
- * @param state - The domain state containing profile and enabled status
- * @returns Promise that resolves when the cookie is updated
+ * Get cookie info for a domain
  */
-export async function updateXdebugCookie(domain: string, state: DomainState): Promise<void> {
-  const sanitizedDomain = sanitizeDomain(domain);
-  if (!sanitizedDomain) {
-    throw new Error('Invalid domain');
-  }
-
+export async function getXdebugCookie(domain: string): Promise<browser.Cookies.Cookie | null> {
   try {
-    if (state.enabled) {
-      const cookieValue = state.customKey || state.profile;
-      await browser.cookies.set({
-        url: `http://${sanitizedDomain}`,
-        name: XDEBUG_COOKIE_NAME,
-        value: cookieValue,
-        domain: sanitizedDomain,
-        path: '/',
-        secure: true,
-        httpOnly: true,
-        sameSite: 'lax'
+    // Try both HTTP and HTTPS for localhost
+    if (domain.includes('localhost') || domain.match(/^(127\.0\.0\.1|::1)/)) {
+      let cookie = await browser.cookies.get({
+        name: 'XDEBUG_SESSION',
+        url: `http://${domain}`
       });
-    } else {
-      await browser.cookies.remove({
-        url: `http://${sanitizedDomain}`,
-        name: XDEBUG_COOKIE_NAME
-      });
+      if (!cookie) {
+        cookie = await browser.cookies.get({
+          name: 'XDEBUG_SESSION',
+          url: `https://${domain}`
+        });
+      }
+      return cookie;
     }
+
+    // For other domains, just try HTTP
+    const cookie = await browser.cookies.get({
+      name: 'XDEBUG_SESSION',
+      url: `http://${domain}`
+    });
+    return cookie;
   } catch (error) {
-    console.error('Failed to update Xdebug cookie:', error);
-    throw error;
+    console.error('Failed to get cookie:', error);
+    return null;
   }
 }
 
 /**
- * Gets the current Xdebug session cookie for a domain
- * @param domain - The domain to get the cookie for
- * @returns Promise that resolves with the cookie value or null if not found
+ * Get cookie domain based on the input domain
  */
-export async function getXdebugCookie(domain: string): Promise<string | null> {
-  const sanitizedDomain = sanitizeDomain(domain);
-  if (!sanitizedDomain) {
-    throw new Error('Invalid domain');
+function getCookieInfo(domain: string): { domain: string | undefined; url: string } {
+  // Handle localhost and IP domains with ports
+  if (domain.includes('localhost') || domain.match(/^(127\.0\.0\.1|::1)/)) {
+    // Keep the port if it exists
+    const [host, port] = domain.split(':');
+    return {
+      domain: undefined, // Let the browser handle the domain for localhost
+      url: port ? `http://${host}:${port}` : `http://${host}`
+    };
   }
 
+  // For all other domains, include subdomains
+  return {
+    domain: `.${domain.replace(/^\./, '')}`,
+    url: `http://${domain}`
+  };
+}
+
+/**
+ * Update xDebug cookie for a domain
+ */
+export async function updateXdebugCookie(domain: string, state: DomainState): Promise<void> {
   try {
-    const cookie = await browser.cookies.get({
-      url: `http://${sanitizedDomain}`,
-      name: XDEBUG_COOKIE_NAME
-    });
-    return cookie?.value || null;
+    const { domain: cookieDomain, url } = getCookieInfo(domain);
+    
+    // Create both HTTP and HTTPS URLs for thorough cookie removal
+    const httpUrl = url;
+    const httpsUrl = url.replace('http://', 'https://');
+    const urls = [httpUrl, httpsUrl];
+
+    // Remove all existing debug cookies
+    const cookieNames = ['XDEBUG_SESSION', 'XDEBUG_PROFILE', 'XDEBUG_TRACE', 'XDEBUG_TRIGGER'];
+    for (const cookieUrl of urls) {
+      for (const name of cookieNames) {
+        try {
+          await browser.cookies.remove({
+            name,
+            url: cookieUrl,
+          });
+        } catch (e) {
+          // Ignore errors during removal
+          console.log(`Failed to remove cookie ${name} for ${cookieUrl}`, e);
+        }
+      }
+    }
+
+    if (state.enabled) {
+      // Set cookies for both HTTP and HTTPS for localhost
+      const urlsToSet = domain.includes('localhost') || domain.match(/^(127\.0\.0\.1|::1)/) 
+        ? urls 
+        : [httpUrl];
+
+      for (const urlToSet of urlsToSet) {
+        // Set both XDEBUG_SESSION and XDEBUG_TRIGGER for better compatibility
+        await browser.cookies.set({
+          name: 'XDEBUG_SESSION',
+          value: state.profile === 'custom' ? state.customKey || 'custom' : state.profile,
+          url: urlToSet,
+          domain: cookieDomain,
+        });
+
+        // Set XDEBUG_TRIGGER=1 to enable debugging when xdebug.start_with_request=trigger
+        await browser.cookies.set({
+          name: 'XDEBUG_TRIGGER',
+          value: '1',
+          url: urlToSet,
+          domain: cookieDomain,
+        });
+
+        // Set mode-specific cookies
+        if (state.mode === 'profile') {
+          await browser.cookies.set({
+            name: 'XDEBUG_PROFILE',
+            value: '1',
+            url: urlToSet,
+            domain: cookieDomain,
+          });
+        } else if (state.mode === 'trace') {
+          await browser.cookies.set({
+            name: 'XDEBUG_TRACE',
+            value: '1',
+            url: urlToSet,
+            domain: cookieDomain,
+          });
+        }
+      }
+    }
+    // When disabled, we just remove all cookies and don't set any new ones
+    // This ensures Xdebug won't trigger debugging sessions
   } catch (error) {
-    console.error('Failed to get Xdebug cookie:', error);
-    throw error;
+    console.error('Failed to update cookie:', error);
+    throw new Error('Failed to update cookie: ' + (error instanceof Error ? error.message : String(error)));
   }
 } 

@@ -1,78 +1,81 @@
 import browser from 'webextension-polyfill';
-import { DomainState, IDEProfile, createDomainState } from '../types';
-
-interface StorageData {
-  domains: Record<string, DomainState>;
-  defaultProfile: IDEProfile;
-  defaultCustomKey?: string;
-}
+import { StorageData, DomainState, IDEProfile } from '../types';
 
 // Default storage data
-const DEFAULT_STORAGE_DATA: StorageData = {
-  domains: {},
+const defaultStorageData: StorageData = {
   defaultProfile: 'phpstorm',
-  defaultCustomKey: undefined,
+  domains: {},
+  defaultMode: 'debug'
 };
+
+// Create a new domain state
+export function createDomainState(profile: IDEProfile = 'phpstorm', enabled: boolean = false, customKey?: string): DomainState {
+  return {
+    enabled,
+    profile,
+    customKey,
+    mode: 'debug'
+  };
+}
 
 /**
  * Get storage data
  */
 export async function getStorageData(): Promise<StorageData> {
-  const data = await browser.storage.local.get(DEFAULT_STORAGE_DATA) as StorageData;
-  return {
-    domains: data.domains || {},
-    defaultProfile: data.defaultProfile || DEFAULT_STORAGE_DATA.defaultProfile,
-    defaultCustomKey: data.defaultCustomKey,
-  };
-}
-
-/**
- * Update storage data
- */
-export async function updateStorageData(data: Partial<StorageData>) {
-  await browser.storage.local.set(data);
+  try {
+    const result = await browser.storage.local.get('xdebugPro');
+    const data = result.xdebugPro as StorageData | undefined;
+    return data || defaultStorageData;
+  } catch (error) {
+    console.error('Failed to get storage data:', error);
+    return defaultStorageData;
+  }
 }
 
 /**
  * Get domain state
  */
-export async function getDomainState(domain: string): Promise<DomainState | null> {
+export async function getDomainState(domain: string): Promise<DomainState | undefined> {
   const data = await getStorageData();
-  return data.domains[domain] || null;
+  return data.domains[domain];
 }
 
 /**
  * Update domain state
  */
-export async function updateDomainState(
-  domain: string,
-  state: DomainState
-): Promise<void> {
-  const data = await getStorageData();
-  data.domains[domain] = {
-    ...state,
-    lastModified: Date.now(),
-  };
-  await updateStorageData({ domains: data.domains });
+export async function updateDomainState(domain: string, state: DomainState): Promise<void> {
+  try {
+    const data = await getStorageData();
+    data.domains[domain] = state;
+    await browser.storage.local.set({ xdebugPro: data });
+  } catch (error) {
+    console.error('Failed to update domain state:', error);
+    throw error;
+  }
 }
 
 /**
  * Remove domain state
  */
 export async function removeDomainState(domain: string): Promise<void> {
-  const data = await getStorageData();
-  delete data.domains[domain];
-  await updateStorageData({ domains: data.domains });
+  try {
+    const data = await getStorageData();
+    delete data.domains[domain];
+    await browser.storage.local.set({ xdebugPro: data });
+  } catch (error) {
+    console.error('Failed to remove domain state:', error);
+    throw error;
+  }
 }
 
 /**
  * Get active domains
  */
-export async function getActiveDomains(): Promise<[string, DomainState][]> {
+export async function getActiveDomains(): Promise<Array<[string, DomainState]>> {
   const data = await getStorageData();
   return Object.entries(data.domains)
     .filter(([_, state]) => state.enabled)
-    .sort((a, b) => b[1].lastModified - a[1].lastModified);
+    .sort((a, b) => a[0].localeCompare(b[0]));
 }
 
 /**
@@ -80,21 +83,30 @@ export async function getActiveDomains(): Promise<[string, DomainState][]> {
  */
 export async function getOrCreateDomainState(domain: string): Promise<DomainState> {
   const data = await getStorageData();
-  return (
-    data.domains[domain] ||
-    createDomainState(false, data.defaultProfile, data.defaultCustomKey)
-  );
+  if (!data.domains[domain]) {
+    const state: DomainState = {
+      enabled: false,
+      profile: data.defaultProfile,
+      mode: data.defaultMode,
+      ...(data.defaultProfile === 'custom' ? { customKey: data.defaultCustomKey } : {})
+    };
+    data.domains[domain] = state;
+    await browser.storage.local.set({ xdebugPro: data });
+  }
+  return data.domains[domain];
 }
 
 /**
  * Update default profile
  */
-export async function updateDefaultProfile(
-  profile: IDEProfile,
-  customKey?: string
-): Promise<void> {
-  await updateStorageData({
-    defaultProfile: profile,
-    defaultCustomKey: customKey,
-  });
+export async function updateDefaultProfile(profile: IDEProfile, customKey?: string): Promise<void> {
+  try {
+    const data = await getStorageData();
+    data.defaultProfile = profile;
+    data.defaultCustomKey = customKey;
+    await browser.storage.local.set({ xdebugPro: data });
+  } catch (error) {
+    console.error('Failed to update default profile:', error);
+    throw error;
+  }
 } 
