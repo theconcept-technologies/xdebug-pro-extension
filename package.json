@@ -1,6 +1,21 @@
 {
   "name": "xdebug-pro",
   "version": "1.0.0",
+  "author": {
+    "name": "Martin Weigl",
+    "url": "https://theconcept-technologies.com"
+  },
+  "company": {
+    "name": "theconcept technologies LLC & theconcept technologies FlexKapG",
+    "url": "https://theconcept-technologies.com",
+    "location": "New York, USA & Riegersburg, Austria"
+  },
+  "homepage": "https://theconcept-technologies.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theconcepttech/xdebug-pro-extension"
+  },
+  "license": "MIT",
   "description": "Chrome extension for managing Xdebug sessions with IDE profiles",
   "scripts": {
     "dev": "vite",
