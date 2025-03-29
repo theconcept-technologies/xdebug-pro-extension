@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xDebug Pro</title>
+    <style>
+        body {
+            width: 320px;
+            padding: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .header img {
+            width: 24px;
+            height: 24px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin: 0;
+        }
+        .profile-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: white;
+        }
+        .domain-list, .active-domains-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 8px;
+        }
+        .domain-item, .active-domain-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        .domain-item:last-child, .active-domain-item:last-child {
+            border-bottom: none;
+        }
+        .active-domain-item .domain {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .active-domain-item .profile {
+            margin: 0 8px;
+            padding: 2px 6px;
+            background: #e3f2fd;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #1976d2;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+            margin: 0 8px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 20px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 20px;
+        }
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+        .remove-button {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 4px;
+            line-height: 1;
+        }
+        .remove-button:hover {
+            color: #f44336;
+        }
+        .empty-message {
+            color: #666;
+            text-align: center;
+            padding: 16px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="../icon.png" alt="xDebug Pro Logo">
+            <h1>xDebug Pro</h1>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">IDE Profile</h2>
+            <select id="profileSelect" class="profile-select">
+                <option value="phpstorm">PHPStorm</option>
+                <option value="vscode">VS Code</option>
+                <option value="custom">Custom</option>
+            </select>
+            <div id="customKeyContainer" style="display: none;">
+                <input type="text" id="customKey" placeholder="Enter custom Xdebug key" class="profile-select">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Current Domain</h2>
+            <div id="domainList" class="domain-list">
+                <!-- Current domain will be populated dynamically -->
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Active Domains</h2>
+            <div id="activeDomainsList" class="active-domains-list">
+                <!-- Active domains will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+    <script type="module" src="./popup.ts"></script>
+</body>
+</html> 

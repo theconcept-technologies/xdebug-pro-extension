@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="128" height="128" rx="24" fill="#FFA726"/>
+    <text x="64" y="48" font-family="Arial Black, sans-serif" font-size="48" font-weight="900" fill="white" text-anchor="middle">X</text>
+    <text x="64" y="96" font-family="Arial Black, sans-serif" font-size="24" font-weight="900" fill="white" text-anchor="middle">DEBUG</text>
+</svg> 
