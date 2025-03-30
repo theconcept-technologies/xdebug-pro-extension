@@ -11,9 +11,9 @@
     </div>
 
     <!-- Main Content -->
-    <div class="p-4 space-y-4">
+    <div class="p-3 space-y-3">
       <!-- IDE Profile Section -->
-      <div class="space-y-2">
+      <div class="space-y-1.5">
         <label class="block text-sm font-semibold text-gray-700">IDE Profile</label>
         <select
           v-model="selectedProfile"
@@ -36,7 +36,7 @@
       </div>
 
       <!-- xDebug Mode Section -->
-      <div class="space-y-2">
+      <div class="space-y-1.5">
         <label class="block text-sm font-semibold text-gray-700">Mode</label>
         <div class="grid grid-cols-3 gap-2">
           <!-- Debug Mode -->
@@ -97,24 +97,35 @@
       </div>
 
       <!-- Current Domain Section -->
-      <div class="space-y-2">
+      <div class="space-y-1.5">
         <div class="flex justify-between items-center">
-          <h2 class="text-sm font-semibold text-gray-700">Current Domain</h2>
-          <span class="text-xs text-gray-500">{{ currentDomain || 'No active domain' }}</span>
+          <h2 class="text-sm font-semibold text-gray-700 whitespace-nowrap">Current Domain</h2>
+          <div class="group relative">
+            <span class="text-xs text-gray-500 ml-2 truncate max-w-[180px]">{{ currentDomain || 'No active domain' }}</span>
+            <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
+              {{ currentDomain || 'No active domain' }}
+              <div class="absolute left-1/2 -translate-x-1/2 top-full -mt-2 border-4 border-transparent border-t-gray-900"></div>
+            </div>
+          </div>
         </div>
         <button
           @click="toggleCurrentDomain"
           :disabled="!currentDomain"
           :class="[
-            'w-full px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2',
+            'relative w-full px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 overflow-hidden',
             isEnabled
-              ? 'bg-[#F6A623] text-white hover:bg-[#E59512] focus:ring-[#F6A623]'
+              ? 'bg-[#F6A623] text-white hover:bg-[#E59512] focus:ring-[#F6A623] animate-pulse-subtle'
               : !currentDomain
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-500'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-500 shimmer-button'
           ]"
         >
-          {{ isEnabled ? 'Disable xDebug' : 'Enable xDebug' }}
+          <span class="relative z-10">{{ isEnabled ? 'Disable xDebug' : 'Enable xDebug' }}</span>
+          <div
+            v-if="!isEnabled && currentDomain"
+            class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-50 -translate-x-full animate-shimmer"
+            style="background-size: 200% 100%;"
+          ></div>
         </button>
 
         <!-- Debug Status -->
@@ -152,7 +163,7 @@
       </div>
 
       <!-- Active Domains Section -->
-      <div class="space-y-2">
+      <div class="space-y-1.5">
         <h2 class="text-sm font-semibold text-gray-700">Active Domains</h2>
         <div v-if="activeDomains.length === 0" class="text-sm text-gray-500 text-center py-4 bg-gray-50 rounded-lg">
           No active domains
@@ -190,25 +201,46 @@
       </div>
 
       <!-- Error Message -->
-      <div v-if="error" class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+      <div v-if="error" class="mt-3 p-2 bg-red-50 border border-red-200 rounded-lg">
         <p class="text-sm text-red-600">{{ error }}</p>
       </div>
     </div>
 
     <!-- Footer -->
-    <div class="border-t border-gray-200 p-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-2">
-          <img src="@/assets/tc_logo.png" alt="theconcept technologies" class="h-6 w-auto" />
-          <span class="text-xs text-gray-500">© {{ new Date().getFullYear() }} theconcept technologies</span>
+    <div class="border-t border-gray-200 p-3">
+      <div class="flex flex-col space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <img src="@/assets/tc_logo.png" alt="theconcept technologies" class="h-5 w-auto" />
+            <span class="text-xs text-gray-500">© {{ new Date().getFullYear() }} theconcept technologies</span>
+          </div>
+          <button
+            @click="showCompanyInfo = true"
+            class="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors duration-200 focus:outline-none"
+            title="About theconcept technologies"
+          >
+            <QuestionMarkCircleIcon class="h-5 w-5" />
+          </button>
         </div>
-        <button
-          @click="showCompanyInfo = true"
-          class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors duration-200 focus:outline-none"
-          title="About theconcept technologies"
-        >
-          <QuestionMarkCircleIcon class="h-5 w-5" />
-        </button>
+
+        <div class="flex items-center justify-center space-x-2">
+          <a 
+            href="https://buymeacoffee.com/theconcepttechnologies" 
+            target="_blank"
+            class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-sm"
+          >
+            <img src="@/assets/buymeacoffee.png" alt="Buy Me A Coffee" class="w-4 h-4 mr-1.5" />
+            Buy us a coffee
+          </a>
+          <a 
+            href="https://github.com/sponsors/theconcept-technologies" 
+            target="_blank"
+            class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-sm"
+          >
+            <img src="@/assets/github-mark.png" alt="GitHub" class="w-4 h-4 mr-1.5" />
+            Sponsor on GitHub
+          </a>
+        </div>
       </div>
 
       <!-- Company Info Modal -->
@@ -394,12 +426,20 @@ xdebug.start_with_request = trigger</pre>
                 target="_blank" 
                 class="text-[#F6A623] hover:text-[#E59512]"
               >
-                Xdebug documentation </a> and make sure that you have configured start_with_request = trigger correctly
+                Xdebug documentation
+              </a>
             </p>
           </div>
         </div>
       </div>
     </div>
+
+    <SponsorOverlay
+      :show="showSponsorOverlay"
+      :activation-count="activationCount"
+      @close="handleSponsorOverlayClose"
+      @remind-later="handleRemindLater"
+    />
   </div>
 </template>
 
@@ -421,6 +461,8 @@ import {
   QuestionMarkCircleIcon,
   XMarkIcon
 } from '@heroicons/vue/24/outline';
+import SponsorOverlay from './SponsorOverlay.vue';
+import { incrementActivationCount, markMilestoneShown, deferOverlay } from '../utils/sponsorStorage';
 
 declare const chrome: typeof import('chrome');
 
@@ -433,6 +475,9 @@ const activeDomains = ref<Array<{ name: string; profile: string; mode: XDebugMod
 const error = ref<string | null>(null);
 const showCompanyInfo = ref(false);
 const showDebugHelp = ref(false);
+const showSponsorOverlay = ref(false);
+const currentMilestone = ref<number | undefined>();
+const activationCount = ref(0);
 
 // Get domain from URL
 function getDomainFromUrl(url: string): string {
@@ -520,6 +565,17 @@ async function toggleCurrentDomain() {
   try {
     error.value = null;
     const state = await getOrCreateDomainState(currentDomain.value);
+    
+    // If we're enabling debugging, increment the activation count
+    if (!state.enabled) {
+      const { count, shouldShowOverlay, milestone } = await incrementActivationCount();
+      if (shouldShowOverlay && milestone) {
+        showSponsorOverlay.value = true;
+        currentMilestone.value = milestone;
+        activationCount.value = count;
+      }
+    }
+    
     state.enabled = !state.enabled;
     state.profile = selectedProfile.value;
     state.mode = selectedMode.value;
@@ -610,6 +666,19 @@ function getModeIcon(mode: XDebugMode) {
   }
 }
 
+// Add sponsor overlay handlers
+async function handleSponsorOverlayClose() {
+  if (currentMilestone.value) {
+    await markMilestoneShown(currentMilestone.value);
+  }
+  showSponsorOverlay.value = false;
+}
+
+async function handleRemindLater() {
+  await deferOverlay();
+  showSponsorOverlay.value = false;
+}
+
 // Initialize on mount
 onMounted(initializePopup);
 </script>
@@ -618,4 +687,28 @@ onMounted(initializePopup);
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.9; }
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+.shimmer-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-shimmer {
+  animation: shimmer 3.5s ease-in-out infinite;
+}
 </style> 

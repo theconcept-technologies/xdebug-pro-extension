@@ -152,3 +152,12 @@ MIT License - see [LICENSE](LICENSE) file for details
 - [Xdebug](https://xdebug.org/) - The powerful PHP debugging tool
 - [Chrome Extensions Documentation](https://developer.chrome.com/docs/extensions/) - For development guidelines
 - All contributors who help improve this project 
+
+## ☕ Support Us
+
+If you find this project helpful, consider supporting us:
+
+- [☕ Buy Me a Coffee](https://buymeacoffee.com/theconcepttechnologies)
+- [💜 GitHub Sponsors](https://github.com/sponsors/theconcept-technologies)
+
+Every bit of support helps us improve and maintain this tool for developers like you. 
