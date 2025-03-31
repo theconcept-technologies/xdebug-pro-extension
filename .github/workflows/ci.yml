@@ -34,7 +34,7 @@ jobs:
         run: |
           node -e "
           const fs = require('fs');
-          const manifest = JSON.parse(fs.readFileSync('public/manifest.json', 'utf8'));
+          const manifest = JSON.parse(fs.readFileSync('src/manifest.json', 'utf8'));
           if (!manifest.manifest_version || manifest.manifest_version !== 3) {
             throw new Error('Invalid or missing manifest_version');
           }
