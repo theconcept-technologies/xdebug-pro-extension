@@ -143,8 +143,6 @@ This extension implements:
 - No external dependencies or tracking
 - Regular security updates
 
-![CI](https://github.com/theconcept-technologies/xdebug-pro-extension/actions/workflows/ci.yml/badge.svg)
-
 ## License
 
 MIT License - see [LICENSE](LICENSE) file for details
