@@ -21,6 +21,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "lint": "eslint . --ext .ts,.tsx,.js,.vue",
     "generate-icons": "node scripts/generate-icons.js",
     "release": "node scripts/create-release.js",
     "release:patch": "node scripts/create-release.js patch",
@@ -39,6 +40,7 @@
   "devDependencies": {
     "@types/chrome": "^0.0.263",
     "@types/node": "^22.13.14",
+    "@typescript-eslint/eslint-plugin": "^8.29.0",
     "@vitejs/plugin-vue": "^5.0.4",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
