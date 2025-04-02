@@ -37,6 +37,13 @@ function updatePackageVersion(type = 'patch') {
   return newVersion;
 }
 
+function syncManifestVersion(newVersion) {
+  const manifestPath = path.join(process.cwd(), 'src/manifest.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  manifest.version = newVersion;
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
+}
+
 function createRelease() {
   // Get version type from command line argument
   const versionType = process.argv[2] || 'patch';
@@ -54,6 +61,7 @@ function createRelease() {
     // Update version in package.json
     console.log('📝 Updating version...');
     const newVersion = updatePackageVersion(versionType);
+    syncManifestVersion(newVersion);
     console.log(`✨ New version: ${newVersion}`);
 
     // Build the extension
@@ -98,4 +106,4 @@ Next steps:
   }
 }
 
-createRelease(); 
+createRelease();
