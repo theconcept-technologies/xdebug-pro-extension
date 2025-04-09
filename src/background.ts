@@ -31,7 +31,7 @@ async function updateIcon(tabId: number, isActive: boolean): Promise<void> {
     console.log('Using icon paths:', isActive ? ICON_PATHS.active : ICON_PATHS.inactive);
     
     // Use Chrome's API directly for icon updates
-    chrome.action.setIcon({
+    await chrome.action.setIcon({
       tabId,
       path: isActive ? ICON_PATHS.active : ICON_PATHS.inactive
     });
@@ -49,13 +49,13 @@ async function checkXdebugStatus(tabId: number, url: string): Promise<void> {
     console.log(`Checking xDebug status for tab ${tabId}, url: ${url}`);
     const domain = sanitizeDomain(url);
     console.log('Sanitized domain:', domain);
-    
+
     const state = await getDomainState(domain);
     console.log('Domain state:', state);
-    
+
     // Update icon based on state
     await updateIcon(tabId, state?.enabled || false);
-    
+
     // Also update badge text to show mode
     if (state?.enabled) {
       chrome.action.setBadgeText({
@@ -93,23 +93,23 @@ async function handleTabUpdate(
   tab: Tabs.Tab
 ): Promise<void> {
   console.log(`Tab update - tabId: ${tabId}, changeInfo:`, changeInfo);
-  
+
   // Check if this is a page reload or navigation
   if (changeInfo.status === 'loading' && tab.url) {
     console.log('Page is loading, updating state');
     try {
       const domain = sanitizeDomain(tab.url);
       console.log('Processing domain:', domain);
-      
+
       const state = await getDomainState(domain);
       console.log('Current domain state:', state);
-      
+
       // Always update cookie and icon state on page load
       if (state) {
         await updateXdebugCookie(domain, state);
         console.log('Cookie updated');
       }
-      
+
       // Update icon immediately on page load
       await checkXdebugStatus(tabId, tab.url);
     } catch (error) {
@@ -127,7 +127,7 @@ async function handleCookieChange({ cookie, removed }: CookieInfo): Promise<void
     try {
       const domain = cookie.domain.replace(/^\./, '');
       console.log('Processing domain:', domain);
-      
+
       let state = await getDomainState(domain);
       console.log('Current state:', state);
 
@@ -185,4 +185,34 @@ browser.webNavigation.onCommitted.addListener(async (details) => {
 
 // Register listeners
 browser.tabs.onUpdated.addListener(handleTabUpdate);
-browser.cookies.onChanged.addListener(handleCookieChange); 
+browser.cookies.onChanged.addListener(handleCookieChange);
+
+/**
+ * Checks all open tabs and updates their icons based on xDebug state
+ */
+async function syncAllTabIcons(): Promise<void> {
+  try {
+    const tabs = await browser.tabs.query({});
+    for (const tab of tabs) {
+      if (tab.id && tab.url) {
+        const domain = sanitizeDomain(tab.url);
+        const state = await getDomainState(domain);
+        if (state?.enabled) {
+          await updateIcon(tab.id, true);
+        } else {
+          await updateIcon(tab.id, false);
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Failed to sync all tab icons:', error);
+  }
+}
+
+// Sync icons on startup
+browser.runtime.onStartup.addListener(() => {
+  console.log('Extension started, syncing icons...');
+  syncAllTabIcons();
+});
+
+syncAllTabIcons();

@@ -17,10 +17,13 @@ function copyAssetsPlugin() {
       });
 
       // Copy manifest and icons
+      const rawManifest = require('./src/manifest.json');
+      rawManifest.background.service_worker = 'background.js';
+
       this.emitFile({
         type: 'asset',
         fileName: 'manifest.json',
-        source: JSON.stringify(require('./src/manifest.json'), null, 2),
+        source: JSON.stringify(rawManifest, null, 2),
       });
 
       // Copy all icon files

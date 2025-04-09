@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill';
-import { StorageData, DomainState, IDEProfile } from '../types';
+import { DomainState, IDEProfile, StorageData } from '../types';
 
 // Default storage data
 const defaultStorageData: StorageData = {
@@ -84,13 +84,14 @@ export async function getActiveDomains(): Promise<Array<[string, DomainState]>> 
 export async function getOrCreateDomainState(domain: string): Promise<DomainState> {
   const data = await getStorageData();
   if (!data.domains[domain]) {
-    const state: DomainState = {
+    data.domains[domain] = {
       enabled: false,
       profile: data.defaultProfile,
       mode: data.defaultMode,
-      ...(data.defaultProfile === 'custom' ? { customKey: data.defaultCustomKey } : {})
+      ...(data.defaultProfile === 'custom'
+        ? { customKey: data.defaultCustomKey }
+        : {})
     };
-    data.domains[domain] = state;
     await browser.storage.local.set({ xdebugPro: data });
   }
   return data.domains[domain];
