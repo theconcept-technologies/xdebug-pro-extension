@@ -25,6 +25,9 @@ Thumbs.db
 *.pem
 *.key
 
+# CRX signing artifacts (never commit — not needed for Web Store ZIP upload)
+*.crx
+
 # Logs and debugging
 npm-debug.log*
 yarn-debug.log*

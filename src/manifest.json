@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "xDebug Pro",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "A professional xDebug helper extension for Chrome",
   "permissions": [
     "tabs",
@@ -11,10 +11,11 @@
     "webNavigation"
   ],
   "host_permissions": [
-    "http://*/*",
-    "https://*/*",
     "<all_urls>"
   ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; base-uri 'self'"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
