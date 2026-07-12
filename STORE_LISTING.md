@@ -17,7 +17,7 @@ pre-submit checklist. Nothing here ships in the extension.
 
 ## Summary (short description — max 132 chars)
 
-> Toggle Xdebug sessions from your toolbar — PHPStorm, VS Code or custom, per-domain. 100% local, no tracking, open source.
+> Start & stop Xdebug PHP debug sessions from your toolbar — per domain, PHPStorm/VS Code/custom. Local, no tracking, open source.
 
 ## Detailed description
 
@@ -27,6 +27,10 @@ pre-submit checklist. Nothing here ships in the extension.
 > single click while you work on PHP apps — no bookmarklets, no editing server
 > config, no fiddling with query strings. Pick your IDE and xDebug Pro sets the
 > right cookies for you.
+>
+> **Getting started:** click the toolbar icon, pick your IDE (PHPStorm, VS Code,
+> or a custom key), toggle Xdebug on for the current site, then reload — your IDE
+> picks up the session. Toggle off to stop.
 >
 > **Features**
 > - One-click enable/disable of Xdebug sessions.
@@ -45,6 +49,10 @@ pre-submit checklist. Nothing here ships in the extension.
 > - Open source, so anyone can verify it.
 >
 > Free and open source, from theconcept technologies.
+>
+> Not affiliated with, endorsed by, or an official product of the Xdebug project.
+> "Xdebug" is a trademark of its respective owner; this extension is an
+> independent helper that uses Xdebug's standard trigger cookies.
 
 ## Permission justifications (paste into the review form)
 
