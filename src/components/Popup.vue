@@ -445,7 +445,7 @@ xdebug.start_with_request = trigger</pre>
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
-import { DomainState, IDEProfile, XDebugMode } from '../types';
+import { IDEProfile, XDebugMode } from '../types';
 import {
   getStorageData,
   updateDomainState,

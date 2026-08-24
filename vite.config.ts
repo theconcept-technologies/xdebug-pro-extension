@@ -17,7 +17,9 @@ function copyAssetsPlugin() {
       });
 
       // Copy manifest and icons
-      const rawManifest = require('./src/manifest.json');
+      const rawManifest = JSON.parse(
+        fs.readFileSync(resolve(__dirname, 'src/manifest.json'), 'utf-8')
+      );
       rawManifest.background.service_worker = 'background.js';
 
       this.emitFile({
