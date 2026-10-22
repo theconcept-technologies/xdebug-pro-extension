@@ -10,7 +10,7 @@
   >
     <div v-if="show" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <!-- Background overlay -->
-      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+      <div class="fixed inset-0 bg-gray-500/75 transition-opacity"></div>
 
       <!-- Modal panel -->
       <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
@@ -19,7 +19,7 @@
           <div class="absolute right-0 top-0 pr-4 pt-4">
             <button
               type="button"
-              class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
+              class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-hidden"
               @click="$emit('close')"
             >
               <span class="sr-only">Close</span>
@@ -44,7 +44,7 @@
             <a
               href="https://buymeacoffee.com/theconcepttechnologies"
               target="_blank"
-              class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-sm"
+              class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-xs"
             >
               <img src="@/assets/buymeacoffee.png" alt="Buy Me A Coffee" class="w-4 h-4 mr-2" />
               Buy us a coffee
@@ -52,7 +52,7 @@
             <a
               href="https://github.com/sponsors/theconcept-technologies"
               target="_blank"
-              class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-sm"
+              class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-xs"
             >
               <img src="@/assets/github-mark.png" alt="GitHub" class="w-4 h-4 mr-2" />
               Sponsor on GitHub
