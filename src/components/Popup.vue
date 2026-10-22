@@ -17,7 +17,7 @@
         <label class="block text-sm font-semibold text-gray-700">IDE Profile</label>
         <select
           v-model="selectedProfile"
-          class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#F6A623] focus:border-[#F6A623]"
+          class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg shadow-xs focus:outline-hidden focus:ring-2 focus:ring-[#F6A623] focus:border-[#F6A623]"
         >
           <option value="phpstorm">PHPStorm</option>
           <option value="vscode">VS Code</option>
@@ -25,12 +25,12 @@
         </select>
 
         <!-- Custom Key Input -->
-        <div v-if="selectedProfile === 'custom'" class="mt-2">
+        <div v-if="selectedProfile === 'custom'">
           <input
             v-model="customKey"
             type="text"
             placeholder="Enter custom Xdebug key"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#F6A623] focus:border-[#F6A623]"
+            class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg shadow-xs focus:outline-hidden focus:ring-2 focus:ring-[#F6A623] focus:border-[#F6A623]"
           />
         </div>
       </div>
@@ -83,7 +83,7 @@
         </div>
 
         <!-- Mode Description -->
-        <p class="text-xs text-gray-500 mt-2">
+        <p class="text-xs text-gray-500">
           <template v-if="selectedMode === 'debug'">
             Start an interactive debugging session
           </template>
@@ -112,7 +112,7 @@
           @click="toggleCurrentDomain"
           :disabled="!currentDomain"
           :class="[
-            'relative w-full px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 overflow-hidden',
+            'relative w-full px-4 py-2 text-sm font-medium rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-offset-2 overflow-hidden',
             isEnabled
               ? 'bg-[#F6A623] text-white hover:bg-[#E59512] focus:ring-[#F6A623] animate-pulse-subtle'
               : !currentDomain
@@ -123,14 +123,14 @@
           <span class="relative z-10">{{ isEnabled ? 'Disable xDebug' : 'Enable xDebug' }}</span>
           <div
             v-if="!isEnabled && currentDomain"
-            class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-50 -translate-x-full animate-shimmer"
+            class="absolute inset-0 bg-linear-to-r from-transparent via-white to-transparent opacity-50 -translate-x-full animate-shimmer"
             style="background-size: 200% 100%;"
           ></div>
         </button>
 
         <!-- Debug Status -->
-        <div class="mt-2 text-xs">
-          <div class="flex items-center justify-between p-2 bg-gray-50 rounded hidden">
+        <div class="text-xs">
+          <div class="flex items-center justify-between p-2 bg-gray-50 rounded-sm hidden">
             <span class="text-gray-600">Debug Cookie:</span>
             <span :class="[
               'font-mono',
@@ -141,7 +141,7 @@
                 : 'XDEBUG_TRIGGER=0' }}
             </span>
           </div>
-          <div class="flex items-center justify-between mt-1">
+          <div class="flex items-center justify-between">
             <button
               v-if="!isEnabled"
               @click="showDebugHelp = true"
@@ -172,7 +172,7 @@
           <div
             v-for="domain in activeDomains"
             :key="domain.name"
-            class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg hover:shadow-sm transition-shadow duration-200"
+            class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg hover:shadow-xs transition-shadow duration-200"
           >
             <div class="flex-1">
               <div class="text-sm font-medium text-gray-900">{{ domain.name }}</div>
@@ -190,7 +190,7 @@
             </div>
             <button
               @click="removeDomain(domain.name)"
-              class="ml-2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors duration-200 focus:outline-none"
+              class="ml-2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors duration-200 focus:outline-hidden"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -216,7 +216,7 @@
           </div>
           <button
             @click="showCompanyInfo = true"
-            class="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors duration-200 focus:outline-none"
+            class="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors duration-200 focus:outline-hidden"
             title="About theconcept technologies"
           >
             <QuestionMarkCircleIcon class="h-5 w-5" />
@@ -227,7 +227,7 @@
           <a 
             href="https://buymeacoffee.com/theconcepttechnologies" 
             target="_blank"
-            class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-sm"
+            class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-xs"
           >
             <img src="@/assets/buymeacoffee.png" alt="Buy Me A Coffee" class="w-4 h-4 mr-1.5" />
             Buy us a coffee
@@ -235,7 +235,7 @@
           <a 
             href="https://github.com/sponsors/theconcept-technologies" 
             target="_blank"
-            class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-sm"
+            class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-xs"
           >
             <img src="@/assets/github-mark.png" alt="GitHub" class="w-4 h-4 mr-1.5" />
             Sponsor on GitHub
@@ -246,7 +246,7 @@
       <!-- Company Info Modal -->
       <div
         v-if="showCompanyInfo"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
         @click.self="showCompanyInfo = false"
       >
         <div class="bg-white rounded-lg p-6 max-w-md mx-4 relative">
@@ -298,7 +298,7 @@
                   <ul class="list-disc pl-4 space-y-1">
                     <li>Install PHP Debug extension</li>
                     <li>Add this to launch.json:</li>
-                    <pre class="bg-gray-50 p-2 rounded mt-1 text-xs">
+                    <pre class="bg-gray-50 p-2 rounded-sm mt-1 text-xs">
 {
   "version": "0.2.0",
   "configurations": [{
@@ -347,7 +347,7 @@
       <!-- Debug Help Modal -->
       <div
         v-if="showDebugHelp"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
         @click.self="showDebugHelp = false"
       >
         <div class="bg-white rounded-lg p-6 max-w-md mx-4 relative">
@@ -390,7 +390,7 @@
             <div>
               <h4 class="font-medium text-gray-900">3. Verify Xdebug</h4>
               <p class="text-gray-600">Add this code to your PHP file to check Xdebug:</p>
-              <pre class="bg-gray-50 p-2 rounded mt-1 text-xs">
+              <pre class="bg-gray-50 p-2 rounded-sm mt-1 text-xs">
 &lt;?php
 var_dump(xdebug_info());</pre>
               <p class="text-gray-600 mt-1">This will show Xdebug configuration and status.</p>
@@ -409,7 +409,7 @@ var_dump(xdebug_info());</pre>
             <div>
               <h4 class="font-medium text-gray-900">5. PHP Configuration</h4>
               <p class="text-gray-600">Required php.ini settings:</p>
-              <pre class="bg-gray-50 p-2 rounded mt-1 text-xs">
+              <pre class="bg-gray-50 p-2 rounded-sm mt-1 text-xs">
 xdebug.mode = debug
 xdebug.client_host = localhost
 xdebug.client_port = 9003
@@ -684,10 +684,6 @@ onMounted(initializePopup);
 </script>
 
 <style>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @keyframes pulse-subtle {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.9; }

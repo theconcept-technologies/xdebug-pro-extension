@@ -12,7 +12,7 @@ defineEmits<{
 
 <template>
 <!-- Debug Help Modal -->
-<div v-if="show" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<div v-if="show" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
   <div class="bg-white rounded-lg shadow-xl w-[600px] max-h-[90vh] flex flex-col">
     <!-- Header -->
     <div class="flex items-center justify-between p-4 border-b">
@@ -66,7 +66,7 @@ defineEmits<{
             <ul class="list-disc ml-8 mt-2 space-y-1">
               <li>Restart your PHP service (e.g., Apache, PHP-FPM)</li>
               <li>If using Docker, restart your containers</li>
-              <li>Verify changes with <code class="bg-gray-100 px-1 rounded">php -i | grep xdebug</code></li>
+              <li>Verify changes with <code class="bg-gray-100 px-1 rounded-sm">php -i | grep xdebug</code></li>
             </ul>
           </div>
         </section>
@@ -103,10 +103,10 @@ defineEmits<{
             <p>If debugging is not working:</p>
             <ol class="list-decimal ml-5 space-y-2">
               <li>Verify Xdebug is installed and enabled:
-                <code class="block bg-gray-50 p-2 mt-1 rounded">php -v</code>
+                <code class="block bg-gray-50 p-2 mt-1 rounded-sm">php -v</code>
               </li>
               <li>Check Xdebug logs for connection issues:
-                <div class="bg-gray-50 p-2 mt-1 rounded">
+                <div class="bg-gray-50 p-2 mt-1 rounded-sm">
                   <p># Add to php.ini:</p>
                   <p>xdebug.log = "/path/to/xdebug.log"</p>
                   <p>xdebug.log_level = 7</p>
@@ -124,7 +124,7 @@ defineEmits<{
     <div class="border-t p-4 flex justify-end">
       <button
         @click="$emit('close')"
-        class="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+        class="px-4 py-2 bg-gray-100 text-gray-700 rounded-sm hover:bg-gray-200"
       >
         Close
       </button>
